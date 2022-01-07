@@ -6,6 +6,8 @@ const mongoose = require("mongoose");
 const express = require("express");
 const app = express();
 
+app.use(express.json());
+
 (async () => {
   try {
     await mongoose.connect(process.env.DB_URL);
