@@ -1,3 +1,6 @@
+const User = require("../models/User");
+const Role = require("../models/Role");
+
 class AuthController {
   auth(req, res) {
     res.send({ message: "OK" });
@@ -7,6 +10,7 @@ class AuthController {
       res.send("REG");
     } catch (e) {
       console.log(e);
+      res.status(400).json({ message: "Registration error" });
     }
   }
 }
