@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Role = require("../models/Role");
+const bcrypt = require("bcryptjs");
 
 class AuthController {
   auth(req, res) {
@@ -12,7 +13,10 @@ class AuthController {
       if (candidate) {
         return res.status(400).json({ message: "User already exists" });
       }
-      const user = await User.create({ username, password });
+      const salt = bcrypt.genSaltSync(10);
+      const passwordHash = bcrypt.hashSync(password, salt);
+      const userRole = await Role.findOne({ value: "USER" });
+      const user = await User.create({ username, password: passwordHash, roles: [userRole.value] });
       res.send(user);
     } catch (e) {
       console.log(e);
