@@ -13,5 +13,13 @@ router.post(
   ],
   AuthController.registration
 );
+router.post(
+  "/login",
+  [
+    check("username", "Username is required").notEmpty(),
+    check("password", "Minimum 4 symbols max 10").isLength({ min: 4, max: 10 }),
+  ],
+  AuthController.login
+);
 
 module.exports = router;
