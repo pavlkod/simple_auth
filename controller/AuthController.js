@@ -1,8 +1,17 @@
 const User = require("../models/User");
 const Role = require("../models/Role");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const { validationResult } = require("express-validator");
+
+const generateAccessToken = (id, roles) => {
+  const payload = {
+    id,
+    roles,
+  };
+  return jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: "24h" });
+};
 
 class AuthController {
   auth(req, res) {
@@ -41,6 +50,8 @@ class AuthController {
       if (!validatePassword) {
         return res.status(400).json({ message: `Wrong password` });
       }
+      const token = generateAccessToken(user._id, user.roles);
+      return res.json(token);
     } catch (e) {
       res.status(400).json({ message: "Login error" });
     }
