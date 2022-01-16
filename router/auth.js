@@ -8,7 +8,7 @@ router.get("/", AuthController.auth);
 router.post(
   "/registration",
   [
-    check("username", "Username is required"),
+    check("username", "Username is required").notEmpty(),
     check("password", "Minimum 4 symbols max 10").isLength({ min: 4, max: 10 }),
   ],
   AuthController.registration
