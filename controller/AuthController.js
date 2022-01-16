@@ -30,5 +30,20 @@ class AuthController {
       res.status(400).json({ message: "Registration error" });
     }
   }
+  async login(req, res) {
+    try {
+      const { username, password } = req.body;
+      const user = await User.findOne({ username });
+      if (!user) {
+        return res.status(400).json({ message: `User ${username} doesn't exists` });
+      }
+      const validatePassword = bcrypt.compareSync(password, user.password);
+      if (!validatePassword) {
+        return res.status(400).json({ message: `Wrong password` });
+      }
+    } catch (e) {
+      res.status(400).json({ message: "Login error" });
+    }
+  }
 }
 module.exports = new AuthController();
