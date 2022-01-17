@@ -14,7 +14,13 @@ const generateAccessToken = (id, roles) => {
 };
 
 class AuthController {
-  auth(req, res) {
+  async getUsers(req, res) {
+    try {
+      const users = await User.find();
+      res.json(users);
+    } catch (e) {
+      res.status(400).json({ message: "Error get users" });
+    }
     res.send({ message: "OK" });
   }
   async registration(req, res) {
@@ -31,7 +37,7 @@ class AuthController {
       }
       const salt = bcrypt.genSaltSync(10);
       const passwordHash = bcrypt.hashSync(password, salt);
-      const userRole = await Role.findOne({ value: "USER" });
+      const userRole = await Role.findOne({ value: "ADMIN" });
       const user = await User.create({ username, password: passwordHash, roles: [userRole.value] });
       res.send(user);
     } catch (e) {
