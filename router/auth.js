@@ -5,8 +5,9 @@ const router = new Router();
 const { check } = require("express-validator");
 
 const authMiddleware = require("../middleware/auth");
+const rolesMiddleware = require("../middleware/role");
 
-router.get("/", authMiddleware, AuthController.getUsers);
+router.get("/", rolesMiddleware(["ADMIN"]), AuthController.getUsers);
 router.post(
   "/registration",
   [
